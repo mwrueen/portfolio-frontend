@@ -10,6 +10,7 @@ import {
   FileText, FolderGit2, ExternalLink, Sparkles, Eye, Globe, ArrowUpRight
 } from 'lucide-react';
 import { getAdminToken, clearAdminAuth } from '@/lib/auth';
+import { API_BASE_URL, BASE_URL } from '@/lib/api';
 import RichTextEditor from '@/components/RichTextEditor';
 
 // Helper to convert existing markdown content into HTML for Quill editor
@@ -153,11 +154,11 @@ export default function AdminDashboardPage() {
 
     try {
       const [pRes, tRes, pageRes] = await Promise.all([
-        fetch('http://127.0.0.1:8000/api/v1/admin/projects', {
+        fetch(`${API_BASE_URL}/admin/projects`, {
           headers: { 'Authorization': `Bearer ${token}` }
         }),
-        fetch('http://127.0.0.1:8000/api/v1/tech-stacks'),
-        fetch('http://127.0.0.1:8000/api/v1/admin/pages', {
+        fetch(`${API_BASE_URL}/tech-stacks`),
+        fetch(`${API_BASE_URL}/admin/pages`, {
           headers: { 'Authorization': `Bearer ${token}` }
         })
       ]);
@@ -202,7 +203,7 @@ export default function AdminDashboardPage() {
     formData.append('image', file);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/admin/upload', {
+      const res = await fetch(`${API_BASE_URL}/admin/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -284,8 +285,8 @@ export default function AdminDashboardPage() {
     };
 
     const url = editingProject
-      ? `http://127.0.0.1:8000/api/v1/admin/projects/${editingProject.id}`
-      : 'http://127.0.0.1:8000/api/v1/admin/projects';
+      ? `${API_BASE_URL}/admin/projects/${editingProject.id}`
+      : `${API_BASE_URL}/admin/projects`;
 
     const method = editingProject ? 'PUT' : 'POST';
 
@@ -322,7 +323,7 @@ export default function AdminDashboardPage() {
   const handleToggleFeatured = async (p: Project) => {
     const token = getAdminToken();
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/admin/projects/${p.id}/featured`, {
+      const res = await fetch(`${API_BASE_URL}/admin/projects/${p.id}/featured`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -341,7 +342,7 @@ export default function AdminDashboardPage() {
     const token = getAdminToken();
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/admin/projects/${projectToDelete.id}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/projects/${projectToDelete.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -415,8 +416,8 @@ export default function AdminDashboardPage() {
     };
 
     const url = editingPage
-      ? `http://127.0.0.1:8000/api/v1/admin/pages/${editingPage.id}`
-      : 'http://127.0.0.1:8000/api/v1/admin/pages';
+      ? `${API_BASE_URL}/admin/pages/${editingPage.id}`
+      : `${API_BASE_URL}/admin/pages`;
 
     const method = editingPage ? 'PUT' : 'POST';
 
@@ -457,7 +458,7 @@ export default function AdminDashboardPage() {
   const handleTogglePageMenu = async (p: CustomPage) => {
     const token = getAdminToken();
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/admin/pages/${p.id}/toggle-menu`, {
+      const res = await fetch(`${API_BASE_URL}/admin/pages/${p.id}/toggle-menu`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -479,7 +480,7 @@ export default function AdminDashboardPage() {
     const token = getAdminToken();
 
     try {
-      const res = await fetch(`http://127.0.0.1:8000/api/v1/admin/pages/${customPageToDelete.id}`, {
+      const res = await fetch(`${API_BASE_URL}/admin/pages/${customPageToDelete.id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -1100,7 +1101,7 @@ export default function AdminDashboardPage() {
                     value={coverImage}
                     onChange={(e) => setCoverImage(e.target.value)}
                     className="w-full px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-slate-800 text-xs focus:outline-none focus:border-indigo-600"
-                    placeholder="http://127.0.0.1:8000/storage/uploads/..."
+                    placeholder={`${BASE_URL}/storage/uploads/...`}
                   />
                 </div>
               </div>

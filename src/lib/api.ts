@@ -1,6 +1,7 @@
 import { Project, TechStack } from '@/types';
+import { API_BASE_URL, BASE_URL } from './config';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
+export { API_BASE_URL, BASE_URL };
 
 export async function getProjects(params?: { featured?: boolean; tech?: string; search?: string }): Promise<Project[]> {
   try {

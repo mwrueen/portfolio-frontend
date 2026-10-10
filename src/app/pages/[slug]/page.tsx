@@ -11,6 +11,7 @@ import {
   Bookmark, Compass, Terminal, ShieldCheck, CheckCheck
 } from 'lucide-react';
 import { CustomPage } from '@/types';
+import { API_BASE_URL } from '@/lib/api';
 
 // Robust inline markdown parser for bold, inline code, and links
 function renderInlineMarkdown(text: string): React.ReactNode {
@@ -117,7 +118,7 @@ export default function CustomPageView() {
       setError('');
 
       try {
-        const res = await fetch(`http://127.0.0.1:8000/api/v1/pages/${slug}`);
+        const res = await fetch(`${API_BASE_URL}/pages/${slug}`);
         if (!res.ok) {
           if (res.status === 404) {
             setError('Page not found');

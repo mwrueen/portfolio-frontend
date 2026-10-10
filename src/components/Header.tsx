@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Terminal, Shield, Code2, Sparkles, FolderGit2, Menu, X, ArrowUpRight, FileText } from 'lucide-react';
 import { getAdminToken } from '@/lib/auth';
+import { API_BASE_URL } from '@/lib/api';
 import { CustomPage } from '@/types';
 
 export default function Header() {
@@ -16,7 +17,7 @@ export default function Header() {
 
   const fetchMenuPages = async () => {
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/pages?menu=1');
+      const res = await fetch(`${API_BASE_URL}/pages?menu=1`);
       if (res.ok) {
         const json = await res.json();
         setMenuPages(json.data || []);

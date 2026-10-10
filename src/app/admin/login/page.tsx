@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Shield, Lock, User, AlertCircle, ArrowRight } from 'lucide-react';
 import { getAdminToken, setAdminAuth } from '@/lib/auth';
+import { API_BASE_URL } from '@/lib/api';
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -29,7 +30,7 @@ export default function AdminLoginPage() {
     setLoading(true);
 
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/v1/auth/login', {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
