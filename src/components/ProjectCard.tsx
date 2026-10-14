@@ -1,7 +1,5 @@
-'use client';
-
 import React from 'react';
-import Link from 'next/link';
+import { Link } from 'react-router-dom';
 import { Project } from '@/types';
 import { ExternalLink, Github, ArrowUpRight, Star, Cpu, CheckCircle2 } from 'lucide-react';
 
@@ -83,7 +81,7 @@ export default function ProjectCard({ project }: Props) {
 
           {/* Title & Tagline */}
           <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors line-clamp-1 mb-1.5">
-            <Link href={`/projects/${project.slug}`}>
+            <Link to={`/projects/${project.slug}`}>
               {project.title}
             </Link>
           </h3>
@@ -124,7 +122,7 @@ export default function ProjectCard({ project }: Props) {
           )}
 
           <Link 
-            href={`/projects/${project.slug}`}
+            to={`/projects/${project.slug}`}
             className="inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-800 group-hover:translate-x-0.5 transition-all"
           >
             Details

@@ -1,8 +1,5 @@
-'use client';
-
 import React, { useState, useEffect, useMemo } from 'react';
-import Link from 'next/link';
-import { useParams, usePathname } from 'next/navigation';
+import { Link, useParams } from 'react-router-dom';
 import { 
   ArrowLeft, Calendar, FileText, Share2, Check, ExternalLink, 
   Shield, Sparkles, AlertCircle, Clock, CheckCircle2, Award, 
@@ -130,6 +127,9 @@ export default function CustomPageView() {
 
         const json = await res.json();
         setPage(json.data);
+        if (json.data) {
+          document.title = `${json.data.meta_title || json.data.title} - Md Mehedi Hasan Rueen`;
+        }
       } catch (err) {
         console.error('Error fetching custom page:', err);
         setError('Network error while retrieving page details');
@@ -238,7 +238,7 @@ function prepareHtmlContent(rawHtml: string): string {
           The requested document (<code className="px-1.5 py-0.5 rounded bg-slate-100 text-slate-800 font-mono text-xs">{slug}</code>) could not be located in the database or has not been published yet.
         </p>
         <Link
-          href="/"
+          to="/"
           className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-semibold text-xs shadow-md shadow-indigo-600/20 transition-all"
         >
           <ArrowLeft className="w-4 h-4" />
@@ -434,7 +434,7 @@ function prepareHtmlContent(rawHtml: string): string {
         <div className="flex flex-wrap items-center justify-between gap-4 mb-8 pb-4 border-b border-slate-100">
           <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
             <Link 
-              href="/" 
+              to="/" 
               className="hover:text-indigo-600 transition-colors flex items-center gap-1.5"
             >
               Showcase
@@ -465,7 +465,7 @@ function prepareHtmlContent(rawHtml: string): string {
               )}
             </button>
             <Link 
-              href="/" 
+              to="/" 
               className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-xs font-semibold text-slate-700 hover:text-indigo-600 transition-all shadow-xs"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
@@ -684,7 +684,7 @@ function prepareHtmlContent(rawHtml: string): string {
                   Contact Md Mehedi Hasan Rueen
                 </a>
                 <Link
-                  href="/"
+                  to="/"
                   className="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-semibold transition-all flex items-center justify-center gap-2"
                 >
                   Explore Projects Showcase

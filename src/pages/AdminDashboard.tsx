@@ -1,8 +1,5 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { Link, useNavigate } from 'react-router-dom';
 import { Project, TechStack, CustomPage } from '@/types';
 import { 
   Plus, Edit2, Trash2, Star, Shield, LogOut, X, RefreshCw, 
@@ -71,7 +68,7 @@ function markdownToHtml(md: string): string {
 }
 
 export default function AdminDashboardPage() {
-  const router = useRouter();
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<'projects' | 'pages'>('projects');
 
   // Projects State
@@ -140,13 +137,14 @@ export default function AdminDashboardPage() {
   }, [toast]);
 
   useEffect(() => {
+    document.title = 'Project & Pages CMS Dashboard | Md Mehedi Hasan Rueen';
     const token = getAdminToken();
     if (!token) {
-      router.push('/admin/login');
+      navigate('/admin/login');
       return;
     }
     fetchData();
-  }, [router]);
+  }, [navigate]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -165,7 +163,7 @@ export default function AdminDashboardPage() {
 
       if (pRes.status === 401 || pageRes.status === 401) {
         clearAdminAuth();
-        router.push('/admin/login');
+        navigate('/admin/login');
         return;
       }
 
@@ -186,7 +184,7 @@ export default function AdminDashboardPage() {
 
   const handleLogout = () => {
     clearAdminAuth();
-    router.push('/admin/login');
+    navigate('/admin/login');
   };
 
   // ---------------------------------------------------------------------------
@@ -793,7 +791,7 @@ export default function AdminDashboardPage() {
                               <div className="font-bold text-slate-900 mb-0.5">{page.title}</div>
                               <div className="flex items-center gap-1.5 text-xs text-indigo-600 font-medium">
                                 <Link 
-                                  href={`/pages/${page.slug}`} 
+                                  to={`/pages/${page.slug}`} 
                                   target="_blank" 
                                   className="hover:underline flex items-center gap-1"
                                 >
@@ -830,7 +828,7 @@ export default function AdminDashboardPage() {
                           </td>
                           <td className="py-4 px-6 text-right space-x-2 whitespace-nowrap">
                             <Link
-                              href={`/pages/${page.slug}`}
+                              to={`/pages/${page.slug}`}
                               target="_blank"
                               className="inline-block p-2 rounded-lg bg-slate-100 border border-slate-200 hover:border-slate-400 text-slate-700 transition-colors"
                               title="View Public Page"
@@ -867,7 +865,7 @@ export default function AdminDashboardPage() {
                       <div>
                         <h4 className="font-bold text-slate-900 text-sm">{page.title}</h4>
                         <Link 
-                          href={`/pages/${page.slug}`} 
+                          to={`/pages/${page.slug}`} 
                           target="_blank" 
                           className="text-xs text-indigo-600 font-medium hover:underline inline-flex items-center gap-0.5"
                         >
@@ -893,7 +891,7 @@ export default function AdminDashboardPage() {
 
                     <div className="flex items-center gap-2 pt-2 border-t border-slate-100">
                       <Link
-                        href={`/pages/${page.slug}`}
+                        to={`/pages/${page.slug}`}
                         target="_blank"
                         className="py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold flex items-center justify-center gap-1"
                       >

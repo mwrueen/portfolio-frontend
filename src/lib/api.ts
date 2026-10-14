@@ -10,9 +10,7 @@ export async function getProjects(params?: { featured?: boolean; tech?: string; 
     if (params?.tech) url.searchParams.append('tech', params.tech);
     if (params?.search) url.searchParams.append('search', params.search);
 
-    const res = await fetch(url.toString(), {
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(url.toString());
 
     if (!res.ok) {
       throw new Error(`Failed to fetch projects: ${res.statusText}`);
@@ -28,9 +26,7 @@ export async function getProjects(params?: { featured?: boolean; tech?: string; 
 
 export async function getProjectBySlug(slug: string): Promise<{ data: Project | null; related: Project[] }> {
   try {
-    const res = await fetch(`${API_BASE_URL}/projects/${slug}`, {
-      next: { revalidate: 60 },
-    });
+    const res = await fetch(`${API_BASE_URL}/projects/${slug}`);
 
     if (!res.ok) {
       return { data: null, related: [] };
@@ -46,9 +42,7 @@ export async function getProjectBySlug(slug: string): Promise<{ data: Project | 
 
 export async function getTechStacks(): Promise<TechStack[]> {
   try {
-    const res = await fetch(`${API_BASE_URL}/tech-stacks`, {
-      next: { revalidate: 300 },
-    });
+    const res = await fetch(`${API_BASE_URL}/tech-stacks`);
 
     if (!res.ok) {
       return [];

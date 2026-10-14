@@ -1,71 +1,78 @@
-import React from 'react';
-import Metadata from 'next';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { getProjectBySlug } from '@/lib/api';
-import { ArrowLeft, ExternalLink, Github, CheckCircle2, Layers, Cpu, Star, Activity } from 'lucide-react';
+import { Project } from '@/types';
+import { ArrowLeft, ExternalLink, Github, CheckCircle2, Layers, Cpu, Star, Activity, RefreshCw } from 'lucide-react';
 import ProjectCard from '@/components/ProjectCard';
 
-interface Props {
-  params: { slug: string };
-}
+export default function ProjectDetail() {
+  const { slug } = useParams<{ slug: string }>();
+  const [project, setProject] = useState<Project | null>(null);
+  const [related, setRelated] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [notFound, setNotFound] = useState(false);
 
-// Dynamic SEO Metadata for Google & Social Media OpenGraph
-export async function generateMetadata({ params }: Props) {
-  const { data: project } = await getProjectBySlug(params.slug);
-  if (!project) {
-    return {
-      title: 'Project Not Found | Md Mehedi Hasan Rueen Portfolio',
-    };
+  useEffect(() => {
+    if (!slug) return;
+    setLoading(true);
+    setNotFound(false);
+
+    getProjectBySlug(slug)
+      .then(({ data, related: relatedProjects }) => {
+        if (!data) {
+          setNotFound(true);
+        } else {
+          setProject(data);
+          setRelated(relatedProjects || []);
+          document.title = `${data.title} - Md Mehedi Hasan Rueen`;
+        }
+      })
+      .catch((err) => {
+        console.error('Error fetching project detail:', err);
+        setNotFound(true);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [slug]);
+
+  if (loading) {
+    return (
+      <div className="pt-32 pb-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 bg-white min-h-[60vh] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-100 flex items-center justify-center mb-4">
+          <RefreshCw className="w-5 h-5 text-indigo-600 animate-spin" />
+        </div>
+        <p className="text-xs font-medium text-slate-500">Loading project architecture & case study...</p>
+      </div>
+    );
   }
 
-  return {
-    title: `${project.title} - Md Mehedi Hasan Rueen`,
-    description: project.tagline || project.summary,
-    openGraph: {
-      title: `${project.title} - Software Engineering Case Study`,
-      description: project.summary,
-      images: project.cover_image ? [{ url: project.cover_image }] : [],
-      type: 'article',
-    },
-  };
-}
-
-export default async function ProjectDetailPage({ params }: Props) {
-  const { data: project, related } = await getProjectBySlug(params.slug);
-
-  if (!project) {
-    notFound();
+  if (notFound || !project) {
+    return (
+      <div className="pt-32 pb-20 max-w-xl mx-auto px-4 text-center min-h-[60vh] flex flex-col items-center justify-center">
+        <div className="w-16 h-16 rounded-2xl bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-600 mb-4">
+          <Cpu className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold text-slate-900 mb-2">Project Not Found</h2>
+        <p className="text-sm text-slate-600 mb-6">
+          The requested engineering case study could not be located in our system.
+        </p>
+        <Link
+          to="/"
+          className="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all inline-flex items-center gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Showcase
+        </Link>
+      </div>
+    );
   }
-
-  // JSON-LD Structured Data Schema for Search Engine Optimization
-  const jsonLd = {
-    '@context': 'https://schema.org',
-    '@type': 'SoftwareApplication',
-    'name': project.title,
-    'description': project.summary,
-    'applicationCategory': 'DeveloperApplication',
-    'operatingSystem': 'Linux, Docker, Cloud',
-    'author': {
-      '@type': 'Person',
-      'name': 'Md Mehedi Hasan Rueen',
-      'jobTitle': 'Software Engineer'
-    },
-    'url': project.demo_url || 'https://mwrueen.dev',
-  };
 
   return (
     <div className="pt-28 pb-20 max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 bg-white">
-      
-      {/* Inject JSON-LD Schema */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-
       {/* Back Navigation */}
       <Link 
-        href="/" 
+        to="/" 
         className="inline-flex items-center gap-2 text-xs font-semibold text-slate-500 hover:text-indigo-600 mb-8 transition-colors"
       >
         <ArrowLeft className="w-4 h-4" />

@@ -1,7 +1,5 @@
-'use client';
-
 import React, { useMemo } from 'react';
-import dynamic from 'next/dynamic';
+import ReactQuill from 'react-quill-new';
 import 'react-quill-new/dist/quill.snow.css';
 
 interface RichTextEditorProps {
@@ -10,23 +8,6 @@ interface RichTextEditorProps {
   placeholder?: string;
   minHeight?: string;
 }
-
-// Dynamically import ReactQuill with SSR disabled to prevent window/document undefined issues
-const ReactQuill = dynamic(
-  async () => {
-    const { default: RQ } = await import('react-quill-new');
-    return RQ;
-  },
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-64 flex flex-col items-center justify-center bg-slate-50 border border-slate-200 rounded-xl text-slate-400 text-xs gap-2">
-        <div className="w-5 h-5 rounded-full border-2 border-indigo-600 border-t-transparent animate-spin" />
-        <span className="font-medium text-slate-500">Loading Quill Rich Text Editor...</span>
-      </div>
-    ),
-  }
-);
 
 export default function RichTextEditor({
   value,
@@ -68,15 +49,7 @@ export default function RichTextEditor({
 
   return (
     <div className="rich-text-editor-wrapper bg-white rounded-xl shadow-xs overflow-hidden">
-      <ReactQuill
-        theme="snow"
-        value={value}
-        onChange={onChange}
-        modules={modules}
-        formats={formats}
-        placeholder={placeholder}
-      />
-      <style jsx global>{`
+      <style>{`
         .rich-text-editor-wrapper .ql-toolbar.ql-snow {
           border-top-left-radius: 0.75rem;
           border-top-right-radius: 0.75rem;
@@ -103,6 +76,14 @@ export default function RichTextEditor({
           font-style: normal;
         }
       `}</style>
+      <ReactQuill
+        theme="snow"
+        value={value}
+        onChange={onChange}
+        modules={modules}
+        formats={formats}
+        placeholder={placeholder}
+      />
     </div>
   );
 }

@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
 import HeroSection from '@/components/HeroSection';
 import TechStackFilter from '@/components/TechStackFilter';
@@ -7,7 +5,7 @@ import ProjectCard from '@/components/ProjectCard';
 import ProjectSearch from '@/components/ProjectSearch';
 import { Project, TechStack } from '@/types';
 import { getProjects, getTechStacks } from '@/lib/api';
-import { FolderGit2, RefreshCw, Cpu, Sparkles } from 'lucide-react';
+import { FolderGit2, RefreshCw, Cpu } from 'lucide-react';
 
 export default function Home() {
   const [projects, setProjects] = useState<Project[]>([]);
@@ -15,6 +13,10 @@ export default function Home() {
   const [selectedTech, setSelectedTech] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    document.title = 'Md Mehedi Hasan Rueen | Software Engineer & Systems Architect Portfolio';
+  }, []);
 
   useEffect(() => {
     async function loadData() {

@@ -1,28 +1,30 @@
-'use client';
-
 import React, { useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useNavigate } from 'react-router-dom';
 import { Shield, Lock, User, AlertCircle, ArrowRight } from 'lucide-react';
 import { getAdminToken, setAdminAuth } from '@/lib/auth';
 import { API_BASE_URL } from '@/lib/api';
 
-export default function AdminLoginPage() {
-  const router = useRouter();
+export default function AdminLogin() {
+  const navigate = useNavigate();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
+  useEffect(() => {
+    document.title = 'Admin CMS Portal | Md Mehedi Hasan Rueen';
+  }, []);
+
   // If already authenticated, bypass login and redirect directly to dashboard
   useEffect(() => {
     const token = getAdminToken();
     if (token) {
-      router.replace('/admin/dashboard');
+      navigate('/admin/dashboard', { replace: true });
     } else {
       setCheckingAuth(false);
     }
-  }, [router]);
+  }, [navigate]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,7 +50,7 @@ export default function AdminLoginPage() {
       // Store auth state persistently across localStorage and cookies
       setAdminAuth(data.access_token, data.user);
 
-      router.push('/admin/dashboard');
+      navigate('/admin/dashboard');
     } catch (err: any) {
       setError(err.message || 'Authentication failed');
     } finally {
